@@ -1,13 +1,15 @@
 package Apktool;
 
+/**
+ * author:szf
+ * desc:apktool命令
+ * date:2021/2/19
+ */
 public class CommandManager {
-    public static final String DEFAULT_DECOMPILE_COMMAND="cmd /c apktool -sf d ";
-    public static final String OUTPUT_PATH_DECOMPILE_COMMAND="cmd /c apktool -sf -o ";
-    public static String getCommandWithOutputPath(String inputPath,String outputPath){
-        return OUTPUT_PATH_DECOMPILE_COMMAND+outputPath+" d "+inputPath;
-    }
+    public static final String DEFAULT_DECOMPILE_COMMAND = "cmd /c apktool -sf --no-assets -o out d ";
 
-    public static String getDefaultCommand(String inputPath){
-        return DEFAULT_DECOMPILE_COMMAND+inputPath;
+    //public static final String OUTPUT_PATH_DECOMPILE_COMMAND="cmd /c apktool -sf -o out";
+    public static String getDefaultCommand(String inputPath) {
+        return DEFAULT_DECOMPILE_COMMAND + inputPath;
     }
 }

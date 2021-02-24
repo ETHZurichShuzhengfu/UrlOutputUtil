@@ -1,22 +1,27 @@
 package XmlParse;
 
+/**
+ * author:szf
+ * desc:解析结果
+ * date:2021/2/19
+ */
 public class ParseResultEntry {
-    private String key;
-    private String value;
+    private Object key;
+    private Object value;
 
-    public String getKey() {
+    public Object getKey() {
         return key;
     }
 
-    public void setKey(String key) {
+    public void setKey(Object key) {
         this.key = key;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 }
