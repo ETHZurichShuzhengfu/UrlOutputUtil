@@ -100,8 +100,6 @@ public class UrlOutputUtil {
 
     /**
      * 删除中间目录
-     *
-     * @param file
      */
     public static void deleteDir(File file) {
         if (file.isDirectory()) {
@@ -126,10 +124,10 @@ public class UrlOutputUtil {
 
         @Override
         public void run() {
-            byte[] b = new byte[1024];
             try {
-                while (ins.read(b) != -1) {
-                    System.out.println(new String(b));
+                String line;
+                while ((line=reader.readLine()) != null) {
+                    System.out.println(line);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

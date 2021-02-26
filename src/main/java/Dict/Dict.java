@@ -82,7 +82,7 @@ public class Dict {
                         int splitIndex = entry.indexOf(DICT_ENTRY_SPLIT_SYMBOL);
                         if (splitIndex == -1) {
                             /**
-                             * 字典需要以key:value的形式存在，若冒号不存在，则跳过该entry并提示
+                             * 字典需要以key:value的形式存在，冒号前后不能有空格，若冒号不存在，则跳过该entry并提示
                              */
                             System.out.println(UtilConfiguration.dictErrorHint(file, finalRow, col.get()));
                             col.getAndIncrement();
