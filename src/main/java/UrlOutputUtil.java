@@ -4,8 +4,8 @@ import Dict.Dict;
 import OutputConfiguration.ConfigurationReader;
 import ThreadPool.UrlUtilThreadPool;
 import XmlParse.XmlParser;
-
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +86,11 @@ public class UrlOutputUtil {
              * 等待反编译执行完成
              */
             process.waitFor();
+            File file=new File(UtilConfiguration.RESULT_PATH);
+            if(!file.exists())
+                file.mkdir();
             XmlParser.parseXml(apkName, configuration, isDictOn);
+            writeAddressXml();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -139,5 +143,18 @@ public class UrlOutputUtil {
                 }
             }
         }
+    }
+
+    public static void writeAddressXml() throws IOException {
+        File file=new File(UtilConfiguration.ADDRESS_XML_PATH);
+        BufferedReader reader=new BufferedReader(new FileReader(file,StandardCharsets.UTF_8));
+        String line;
+        String outputFileName=UtilConfiguration.RESULT_PATH+"address.xml";
+        BufferedWriter writer=new BufferedWriter(new FileWriter(outputFileName, StandardCharsets.UTF_8));
+        while((line=reader.readLine())!=null){
+            writer.write(line+"\n");
+        }
+        reader.close();
+        writer.close();
     }
 }

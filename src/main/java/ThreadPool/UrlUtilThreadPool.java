@@ -22,7 +22,7 @@ public class UrlUtilThreadPool {
             synchronized (UrlUtilThreadPool.class) {
                 if (threadPool == null) {
                     threadPool = new ThreadPoolExecutor(5, 10, 3,
-                            TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+                            TimeUnit.SECONDS, new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
                 }
             }
         }

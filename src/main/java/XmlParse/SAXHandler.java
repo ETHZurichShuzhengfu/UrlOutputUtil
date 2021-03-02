@@ -1,8 +1,8 @@
 package XmlParse;
 
 import Constants.UtilConfiguration;
+import POI.OutputExcel;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
@@ -17,46 +17,37 @@ import java.util.Map;
  */
 public class SAXHandler extends DefaultHandler {
     private Map.Entry<String, List<String>> conf_kv;  //检索参数,key为xml文件名,value为需要检索的内容列表
-    private String outputFileName;    //导出excel的文件名
+    private String apkName; //apk名
+    private String fileName; //xml文件名
     private ArrayList<ParseResultEntry> resultEntries;  //检索结果列表
     private boolean isDictOn;
     private Parser parser;
     private ParseResultEntry entry;
 
-    public SAXHandler(String outputFileName, Map.Entry<String, List<String>> conf_kv, boolean isDictOn) {
-        this.outputFileName = outputFileName;
+    public SAXHandler(String apkName, String fileName, Map.Entry<String, List<String>> conf_kv, boolean isDictOn) {
+        this.apkName = apkName;
+        this.fileName = fileName;
         this.conf_kv = conf_kv;
         this.isDictOn = isDictOn;
     }
 
-    public String getFileName() {
-        return outputFileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.outputFileName = fileName;
-    }
-
     @Override
-    public void startDocument() throws SAXException {
+    public void startDocument() {
         resultEntries = new ArrayList<>();
         parser = Parser.getInstance(UtilConfiguration.getParseType(conf_kv.getKey()));
         if (parser == null) {
             System.out.println(conf_kv + ":" + UtilConfiguration.XML_PARSE_NOT_SUPPORT_INFO);
             return;
         }
-        super.startDocument();
     }
 
     @Override
-    public void endDocument() throws SAXException {
+    public void endDocument() {
         try {
-            parser.writeExcel(resultEntries, outputFileName, isDictOn);
-            System.out.println(outputFileName + "写入完成");
+            parser.writeExcel(resultEntries, fileName, isDictOn);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        super.endDocument();
     }
 
     @Override

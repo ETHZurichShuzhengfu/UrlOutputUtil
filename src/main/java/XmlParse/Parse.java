@@ -22,7 +22,7 @@ public interface Parse {
     void characters(char[] ch, int start, int length, ParseResultEntry entry,
                     ArrayList<ParseResultEntry> resultEntries, Map.Entry<String, List<String>> conf_kv);
 
-    void writeExcel(ArrayList<ParseResultEntry> resultEntries,String fileName,boolean isDictOn) throws IOException;
+    void writeExcel(ArrayList<ParseResultEntry> resultEntries, String fileName, boolean isDictOn) throws IOException;
 
-    boolean isFieldValid(List<String>searchField,String content);
+    boolean isFieldValid(List<String> searchField, String content);
 }
