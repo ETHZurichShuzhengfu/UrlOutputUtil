@@ -18,9 +18,6 @@ public class UtilConfiguration {
     public static final String DICT_LIST_EMPTY_INFO = "Could Not Found Any Dict!Skip Load Dict";
     public static final String PROGRAM_END_INFO = "中间目录删除完成,程序执行完毕";
     public static final String INPUT_ERROR = "INPUT APK IS NULL OR APK NOT FOUND!";
-    public static final String CONF_ERROR = "INPUT CONF is NULL OR CONF NOT FOUND!";
-    public static final String PARAM_IN_EMPTY_INFO = "Param -in Must Not Be Null";
-    public static final String PARAM_CONF_EMPTY_INFO = "Param -conf Must Not Be Null";
     public static final String CONF_EMPTY_INFO = "读取到的配置文件内容为空,请根据规范检查配置文件格式是否有问题";
     public static final String XML_PARSE_NOT_SUPPORT_INFO = "Sorry,current xml type is Not supported yet";
     /**
@@ -41,13 +38,6 @@ public class UtilConfiguration {
     public static final String MiddleOutDirectory = "out/";
     public static final String RESULT_PATH = "result/";
     public static final String ADDRESS_XML_PATH = MiddleOutDirectory + "assets/address.xml";
-
-    /**
-     * 执行参数
-     */
-    public static final String INPUT_PARAM = "-in";
-    public static final String CONFIGURATION_PARAM = "-conf";
-    public static final String DICT_PARAM = "-dict";
 
     public static String dictErrorHint(File file, int row, int col) {
         return "Dict " + file.getName() + " has error in row" + row + " item" + col;

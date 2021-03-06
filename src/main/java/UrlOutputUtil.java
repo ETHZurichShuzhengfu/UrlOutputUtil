@@ -16,27 +16,14 @@ import java.util.Map;
  * date:2021/2/19
  */
 public class UrlOutputUtil {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         List<String> params = Arrays.asList(args);
         File middleFiles = new File(UtilConfiguration.MiddleOutDirectory);
-        /**
-         * 输入参数-in不许为空
-         */
-        int inputParamIndex = params.indexOf(UtilConfiguration.INPUT_PARAM);
-        if (inputParamIndex == -1) {
-            System.out.println(UtilConfiguration.PARAM_IN_EMPTY_INFO);
-            return;
-        }
 
         /**
          * 验证apk是否存在
          */
-        int inputFileIndex = inputParamIndex + 1;
-        if (inputFileIndex >= args.length) {
-            System.out.println(UtilConfiguration.INPUT_ERROR);
-            return;
-        }
-        String apkName = params.get(inputFileIndex);
+        String apkName = params.get(0);
         String apkPath = UtilConfiguration.APK_FILEPATH + apkName;
         File apkFile = new File(apkPath);
         if (!apkFile.exists()) {
@@ -45,23 +32,9 @@ public class UrlOutputUtil {
         }
 
         /**
-         * 输入参数-conf不许为空
-         */
-        int confParamIndex = params.indexOf(UtilConfiguration.CONFIGURATION_PARAM);
-        if (confParamIndex == -1) {
-            System.out.println(UtilConfiguration.PARAM_CONF_EMPTY_INFO);
-            return;
-        }
-
-        /**
          * 验证配置文件是否存在
          */
-        int confFileIndex = confParamIndex + 1;
-        if (confFileIndex >= args.length) {
-            System.out.println(UtilConfiguration.CONF_ERROR);
-            return;
-        }
-        String confName = params.get(confFileIndex);
+        String confName = params.get(1);
         String confPath = UtilConfiguration.CONFIGURATION_PATH + confName;
         Map<String, List<String>> configuration = ConfigurationReader.readConfiguration(confPath);
         if (configuration.size() == 0) {
@@ -72,7 +45,7 @@ public class UrlOutputUtil {
         /**
          * 字典功能是否开启
          */
-        boolean isDictOn = params.contains(UtilConfiguration.DICT_PARAM);
+        boolean isDictOn = params.size()==3;
         Process process;
         try {
             if (isDictOn) {
