@@ -5,6 +5,7 @@ import OutputConfiguration.ConfigurationReader;
 import ThreadPool.UrlUtilThreadPool;
 import XmlParse.XmlParser;
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -116,6 +117,14 @@ public class UrlOutputUtil {
                 }
             }
         }
+    }
+
+    private static void copyFile(File source, File dest) throws IOException {
+        FileChannel inputChannel=new FileInputStream(source).getChannel();
+        FileChannel outputChannel=new FileOutputStream(dest).getChannel();
+        outputChannel.transferFrom(inputChannel,0,inputChannel.size());
+        inputChannel.close();
+        outputChannel.close();
     }
 
     public static void writeAddressXml() throws IOException {
