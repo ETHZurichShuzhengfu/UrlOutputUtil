@@ -40,7 +40,6 @@ public class UtilConfiguration {
     public static final String APK_FILEPATH = "apk/";
     public static final String MiddleOutDirectory = "out/";
     public static final String RESULT_PATH = "result/";
-    public static final String ADDRESS_XML_PATH = MiddleOutDirectory + "assets/address.xml";
 
     public static String dictErrorHint(File file, int row, int col) {
         return "dict " + file.getName() + " has error in row" + row + " item" + col;

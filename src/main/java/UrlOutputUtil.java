@@ -44,15 +44,8 @@ public class UrlOutputUtil {
             return;
         }
 
-        /**
-         * 字典功能是否开启
-         */
-        boolean isDictOn = true;
         Process process;
         try {
-//            if (isDictOn) {
-//                Dict.loadDict(UtilConfiguration.DICT_PATH);
-//            }
             process = Runtime.getRuntime().exec(CommandManager.getDefaultCommand(apkPath));
             InputStream ins = process.getInputStream();
             InputStream eos = process.getErrorStream();
