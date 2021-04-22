@@ -19,16 +19,28 @@ public class SAXHandler extends DefaultHandler {
     private String apkName; //apk名
     private String fileName; //xml文件名
     private ArrayList<ParseResultEntry> resultEntries;  //检索结果列表
-    private boolean isDictOn;   //是否开启字典功能
     private Parser parser;  //解析器
     private ParseResultEntry entry;
 
-    public SAXHandler(String apkName, String fileName, Map.Entry<String, List<String>> conf_kv, boolean isDictOn) {
+    public SAXHandler(String apkName, String fileName, Map.Entry<String, List<String>> conf_kv) {
         this.apkName = apkName;
         this.fileName = fileName;
         this.conf_kv = conf_kv;
-        this.isDictOn = isDictOn;
     }
+
+    /**
+     * 继承于sax的DefaultHandler的SAXHandler有五大接口:startElement,endElement,characters,startDocument,endDocument
+     * 本工具使用SAX的方式解析XML，以最简单的一种格式举例: <tag>value</tag>
+     *
+     * startDocument与endDocument在整个xml文档解析的开始与结束时各执行一次
+     *
+     * startElement为读取到某一开始的tag时要进行的处理，
+     * characters为读取到value时要进行的处理,通常使用 String content = new String(ch, start, length)获取value值即可
+     * endElement为读取到某一结束的tag时进行的处理
+     *
+     * Parse接口中的同名方法在对应位置直接调用,startDocument用于判断xml是否可以解析以及初始化结果列表
+     * endDocument调用Parse接口中的writeSheet方法，将结果列表写入excel文件的一张表格
+     */
 
     @Override
     public void startDocument() {
@@ -43,7 +55,7 @@ public class SAXHandler extends DefaultHandler {
     @Override
     public void endDocument() {
         try {
-            parser.writeExcel(resultEntries, fileName, isDictOn);
+            parser.writeSheet(resultEntries, fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

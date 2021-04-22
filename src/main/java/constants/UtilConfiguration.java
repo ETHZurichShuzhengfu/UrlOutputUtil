@@ -23,10 +23,10 @@ public class UtilConfiguration {
     /**
      * 文件类型,根据不同的文件或文件目录名返回对应的FileHandler进行处理
      */
-    public static final int XML_TYPE=10000;
-    public static final int XML_TYPE_NORMAL = 10001;
+    public static final int TYPE_XML = 10000;
+    public static final int TYPE_XML_NORMAL = 10001;
     public static final int TYPE_FILE_COPY = 2;
-    public static final int XML_TYPE_NOT_SUPPORT = -1;
+    public static final int TYPE_NOT_SUPPORT = -1;
     public static final List<String> xmlType_1 = Arrays.asList("integers.xml", "strings.xml", "bools.xml",
             "colors.xml", "dimens.xml");
     public static final List<String> copyFile = Arrays.asList("assets");
@@ -55,15 +55,19 @@ public class UtilConfiguration {
      */
     public static int getParseType(String xmlName) {
         if (xmlType_1.contains(xmlName))
-            return XML_TYPE_NORMAL;
-        return XML_TYPE_NOT_SUPPORT;
+            return TYPE_XML_NORMAL;
+        return TYPE_NOT_SUPPORT;
     }
+
+    /**
+     * 获取文件的执行类型
+     */
     public static int getFileHandlerType(String fileName) {
         if (xmlType_1.contains(fileName))
-            return XML_TYPE;
+            return TYPE_XML;
         else if (copyFile.contains(fileName)) {
             return TYPE_FILE_COPY;
         }
-        return XML_TYPE_NOT_SUPPORT;
+        return TYPE_NOT_SUPPORT;
     }
 }

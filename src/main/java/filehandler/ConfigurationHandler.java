@@ -19,20 +19,24 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * author:szf
- * desc:xml解析器
+ * desc:对读取完成的配置文件进行处理
  * date:2021/2/19
  */
 public class ConfigurationHandler {
-    public static void execute(String apkName, Map<String, List<String>> configuration, boolean isDictOn) throws InterruptedException, IOException {
+    public static void execute(String apkName, Map<String, List<String>> configuration) throws InterruptedException, IOException {
         ExecutorService executorService = UrlUtilThreadPool.getThreadPool();
         SAXParserFactory factory = SAXParserFactory.newInstance();
         CountDownLatch countDownLatch = new CountDownLatch(configuration.size());
         for (Map.Entry<String, List<String>> entry : configuration.entrySet()) {
             String filePath = entry.getKey();
             switch (UtilConfiguration.getFileHandlerType(filePath)) {
-                case UtilConfiguration.XML_TYPE: {
+
+                /**
+                 * 如果是xml类型,则需要初始化对应的parser并进行解析
+                 */
+                case UtilConfiguration.TYPE_XML: {
                     if (new File(UtilConfiguration.XML_PATH + filePath).exists()) {
-                        executorService.submit(new ParserTask(countDownLatch, entry, apkName, entry.getKey(), factory, isDictOn));
+                        executorService.submit(new ParserTask(countDownLatch, entry, apkName, entry.getKey(), factory));
                     } else {
                         System.out.println(UtilConfiguration.xmlNotFoundInfo(filePath));
                         countDownLatch.countDown();
@@ -40,6 +44,9 @@ public class ConfigurationHandler {
                     break;
                 }
 
+                /**
+                 * 如果是需要复制的文件，则创建一个FileCopyManager来进行文件复制操作
+                 */
                 case UtilConfiguration.TYPE_FILE_COPY: {
                     FileCopyManager manager = new FileCopyManager(entry.getKey(), entry.getValue());
                     executorService.submit(new CopyTask(countDownLatch, manager));
@@ -62,22 +69,20 @@ public class ConfigurationHandler {
         private final Map.Entry<String, List<String>> entry;
         private final String apkName;
         private final SAXParserFactory factory;
-        private final boolean isDictOn;
         private final String fileName;
 
         public ParserTask(CountDownLatch countDownLatch, Map.Entry<String, List<String>> entry,
-                          String apkName, String fileName, SAXParserFactory factory, boolean isDictOn) {
+                          String apkName, String fileName, SAXParserFactory factory) {
             this.countDownLatch = countDownLatch;
             this.entry = entry;
             this.apkName = apkName;
             this.factory = factory;
-            this.isDictOn = isDictOn;
             this.fileName = fileName;
         }
 
         @Override
         public void run() {
-            SAXHandler handler = new SAXHandler(apkName, fileName, entry, isDictOn);
+            SAXHandler handler = new SAXHandler(apkName, fileName, entry);
             javax.xml.parsers.SAXParser parser;
             try {
                 parser = factory.newSAXParser();

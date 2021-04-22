@@ -17,6 +17,10 @@ public class UrlUtilThreadPool {
 
     private volatile static ExecutorService threadPool = null;
 
+    /**
+     * 返回一个线程池
+     * @return
+     */
     public static ExecutorService getThreadPool() {
         if (threadPool == null) {
             synchronized (UrlUtilThreadPool.class) {

@@ -4,6 +4,7 @@ import dict.Dict;
 import configuration.ConfigurationReader;
 import threadpool.UrlUtilThreadPool;
 import filehandler.ConfigurationHandler;
+
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -46,32 +47,32 @@ public class UrlOutputUtil {
         /**
          * 字典功能是否开启
          */
-        boolean isDictOn = params.size()==3;
+        boolean isDictOn = true;
         Process process;
         try {
-            if (isDictOn) {
-                Dict.loadDict(UtilConfiguration.DICT_PATH);
-            }
-//            process = Runtime.getRuntime().exec(CommandManager.getDefaultCommand(apkPath));
-//            InputStream ins = process.getInputStream();
-//            InputStream eos = process.getErrorStream();
-//            new Thread(new InputStreamThread(ins)).start();
-//            /**
-//             * 等待反编译执行完成
-//             */
-//            process.waitFor();
-            File file=new File(UtilConfiguration.RESULT_PATH);
-            if(!file.exists())
+//            if (isDictOn) {
+//                Dict.loadDict(UtilConfiguration.DICT_PATH);
+//            }
+            process = Runtime.getRuntime().exec(CommandManager.getDefaultCommand(apkPath));
+            InputStream ins = process.getInputStream();
+            InputStream eos = process.getErrorStream();
+            new Thread(new InputStreamThread(ins)).start();
+            /**
+             * 等待反编译执行完成
+             */
+            process.waitFor();
+            File file = new File(UtilConfiguration.RESULT_PATH);
+            if (!file.exists())
                 file.mkdir();
-            ConfigurationHandler.execute(apkName, configuration, isDictOn);
+            ConfigurationHandler.execute(apkName, configuration);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
             UrlUtilThreadPool.getThreadPool().shutdown();
-//            if (middleFiles.exists()) {
-//                deleteDir(middleFiles);
-//                System.out.println(UtilConfiguration.PROGRAM_END_INFO);
-//            }
+            if (middleFiles.exists()) {
+                deleteDir(middleFiles);
+                System.out.println(UtilConfiguration.PROGRAM_END_INFO);
+            }
         }
     }
 
@@ -88,5 +89,33 @@ public class UrlOutputUtil {
             }
         }
         file.delete();
+    }
+
+    static class InputStreamThread implements Runnable {
+        private InputStream ins;
+        private BufferedReader reader;
+
+        public InputStreamThread(InputStream inputStream) {
+            this.ins = inputStream;
+            this.reader = new BufferedReader(new InputStreamReader(inputStream));
+        }
+
+        @Override
+        public void run() {
+            try {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    ins.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

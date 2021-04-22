@@ -1,5 +1,6 @@
 package filehandler.Parser;
 
+import dict.Dict;
 import poi.ExcelWriter;
 import org.xml.sax.Attributes;
 
@@ -46,16 +47,12 @@ public class BasicParser extends Parser {
     }
 
     @Override
-    public void writeExcel(ArrayList<ParseResultEntry> resultEntries, String fileName, boolean isDictOn) throws IOException {
-        ExcelWriter.writeExcelWithXmlTypeNormal(fileName, resultEntries, isDictOn);
+    public void writeSheet(ArrayList<ParseResultEntry> resultEntries, String fileName) throws IOException {
+        ExcelWriter.writeExcelWithXmlTypeNormal(fileName, resultEntries);
     }
 
     @Override
     public boolean isFieldValid(List<String> searchList, String content) {
-        for (String fieldName : searchList) {
-            if (!fieldName.isEmpty() && fieldName.equals(content))
-                return true;
-        }
-        return false;
+        return Dict.dict.containsKey(content);
     }
 }

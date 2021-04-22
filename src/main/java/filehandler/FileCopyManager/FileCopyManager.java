@@ -6,9 +6,12 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+/**
+ * 用于执行文件拷贝的类
+ */
 public class FileCopyManager {
-    private String directory;
-    private List<String> fileLists;
+    private String directory; //父目录
+    private List<String> fileLists; //父目录下的文件路径
 
     public FileCopyManager() {
 
@@ -20,6 +23,10 @@ public class FileCopyManager {
         this.fileLists = fileLists;
     }
 
+    /**
+     * 复制文件
+     * @throws IOException
+     */
     public void copyFiles() throws IOException {
         FileChannel inputChannel = null;
         FileChannel outputChannel = null;

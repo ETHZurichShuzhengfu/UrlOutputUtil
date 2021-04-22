@@ -13,6 +13,7 @@ import java.util.Map;
  * date:2021/2/23
  */
 public interface Parse {
+
     void startElement(String uri, String localName, String qName, Attributes attributes, ParseResultEntry entry,
                       ArrayList<ParseResultEntry> resultEntries, Map.Entry<String, List<String>> conf_kv);
 
@@ -22,7 +23,7 @@ public interface Parse {
     void characters(char[] ch, int start, int length, ParseResultEntry entry,
                     ArrayList<ParseResultEntry> resultEntries, Map.Entry<String, List<String>> conf_kv);
 
-    void writeExcel(ArrayList<ParseResultEntry> resultEntries, String fileName, boolean isDictOn) throws IOException;
+    void writeSheet(ArrayList<ParseResultEntry> resultEntries, String fileName) throws IOException;
 
     boolean isFieldValid(List<String> searchField, String content);
 }

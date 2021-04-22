@@ -8,6 +8,10 @@ public class OutputExcel {
     private OutputExcel() {
     }
 
+    /**
+     * 返回一个单例excel
+     * @return
+     */
     public static HSSFWorkbook getExcel() {
         if (workbook == null) {
             synchronized (OutputExcel.class) {
