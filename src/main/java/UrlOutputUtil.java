@@ -1,9 +1,9 @@
-import Apktool.CommandManager;
-import Constants.UtilConfiguration;
-import Dict.Dict;
-import OutputConfiguration.ConfigurationReader;
-import ThreadPool.UrlUtilThreadPool;
-import XmlParse.XmlParser;
+import apktool.CommandManager;
+import constants.UtilConfiguration;
+import dict.Dict;
+import configuration.ConfigurationReader;
+import threadpool.UrlUtilThreadPool;
+import filehandler.ConfigurationHandler;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -52,27 +52,26 @@ public class UrlOutputUtil {
             if (isDictOn) {
                 Dict.loadDict(UtilConfiguration.DICT_PATH);
             }
-            process = Runtime.getRuntime().exec(CommandManager.getDefaultCommand(apkPath));
-            InputStream ins = process.getInputStream();
-            InputStream eos = process.getErrorStream();
-            new Thread(new InputStreamThread(ins)).start();
-            /**
-             * 等待反编译执行完成
-             */
-            process.waitFor();
+//            process = Runtime.getRuntime().exec(CommandManager.getDefaultCommand(apkPath));
+//            InputStream ins = process.getInputStream();
+//            InputStream eos = process.getErrorStream();
+//            new Thread(new InputStreamThread(ins)).start();
+//            /**
+//             * 等待反编译执行完成
+//             */
+//            process.waitFor();
             File file=new File(UtilConfiguration.RESULT_PATH);
             if(!file.exists())
                 file.mkdir();
-            XmlParser.parseXml(apkName, configuration, isDictOn);
-            writeAddressXml();
+            ConfigurationHandler.execute(apkName, configuration, isDictOn);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
             UrlUtilThreadPool.getThreadPool().shutdown();
-            if (middleFiles.exists()) {
-                deleteDir(middleFiles);
-                System.out.println(UtilConfiguration.PROGRAM_END_INFO);
-            }
+//            if (middleFiles.exists()) {
+//                deleteDir(middleFiles);
+//                System.out.println(UtilConfiguration.PROGRAM_END_INFO);
+//            }
         }
     }
 
@@ -89,54 +88,5 @@ public class UrlOutputUtil {
             }
         }
         file.delete();
-    }
-
-    static class InputStreamThread implements Runnable {
-        private InputStream ins;
-        private BufferedReader reader;
-
-        public InputStreamThread(InputStream inputStream) {
-            this.ins = inputStream;
-            this.reader = new BufferedReader(new InputStreamReader(inputStream));
-        }
-
-        @Override
-        public void run() {
-            try {
-                String line;
-                while ((line=reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    ins.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static void copyFile(File source, File dest) throws IOException {
-        FileChannel inputChannel=new FileInputStream(source).getChannel();
-        FileChannel outputChannel=new FileOutputStream(dest).getChannel();
-        outputChannel.transferFrom(inputChannel,0,inputChannel.size());
-        inputChannel.close();
-        outputChannel.close();
-    }
-
-    public static void writeAddressXml() throws IOException {
-        File file=new File(UtilConfiguration.ADDRESS_XML_PATH);
-        BufferedReader reader=new BufferedReader(new FileReader(file,StandardCharsets.UTF_8));
-        String line;
-        String outputFileName=UtilConfiguration.RESULT_PATH+"address.xml";
-        BufferedWriter writer=new BufferedWriter(new FileWriter(outputFileName, StandardCharsets.UTF_8));
-        while((line=reader.readLine())!=null){
-            writer.write(line+"\n");
-        }
-        reader.close();
-        writer.close();
     }
 }

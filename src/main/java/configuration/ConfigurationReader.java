@@ -1,4 +1,4 @@
-package OutputConfiguration;
+package configuration;
 
 import java.io.*;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.Map;
  * date:2021/2/22
  */
 public class ConfigurationReader {
-    private static final String XML_SUFFIX = ".xml:";
+    private static final String SPLIT_SYMBOL = ":";
 
     public static Map<String, List<String>> readConfiguration(String configurationFile) throws IOException {
         Map<String, List<String>> configuration = new HashMap<>();
@@ -21,14 +21,13 @@ public class ConfigurationReader {
         String line;
         int row = 1;
         while ((line = reader.readLine()) != null) {
-            int index = line.indexOf(XML_SUFFIX);
+            int index = line.indexOf(SPLIT_SYMBOL);
             if (index == -1) {
                 System.out.println(configurationFile + "的第" + row + "行出现不规范输入，该行自动跳过，请检查配置文件是否有误");
                 continue;
             }
-            int contentStartIndex = index + XML_SUFFIX.length();
-            String fileName = line.substring(0, contentStartIndex - 1).trim();
-            String content = line.substring(contentStartIndex).trim();
+            String fileName = line.substring(0, index).trim();
+            String content = line.substring(index + 1).trim();
             configuration.put(fileName, Arrays.asList(content.split(",")));
             row++;
         }

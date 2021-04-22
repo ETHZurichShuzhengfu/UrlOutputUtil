@@ -1,4 +1,4 @@
-package Apktool;
+package apktool;
 
 /**
  * author:szf

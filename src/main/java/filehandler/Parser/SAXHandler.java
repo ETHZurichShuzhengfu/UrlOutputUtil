@@ -1,7 +1,6 @@
-package XmlParse;
+package filehandler.Parser;
 
-import Constants.UtilConfiguration;
-import POI.OutputExcel;
+import constants.UtilConfiguration;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -20,8 +19,8 @@ public class SAXHandler extends DefaultHandler {
     private String apkName; //apk名
     private String fileName; //xml文件名
     private ArrayList<ParseResultEntry> resultEntries;  //检索结果列表
-    private boolean isDictOn;
-    private Parser parser;
+    private boolean isDictOn;   //是否开启字典功能
+    private Parser parser;  //解析器
     private ParseResultEntry entry;
 
     public SAXHandler(String apkName, String fileName, Map.Entry<String, List<String>> conf_kv, boolean isDictOn) {

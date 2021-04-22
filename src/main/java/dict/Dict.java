@@ -1,7 +1,7 @@
-package Dict;
+package dict;
 
-import Constants.UtilConfiguration;
-import ThreadPool.UrlUtilThreadPool;
+import constants.UtilConfiguration;
+import threadpool.UrlUtilThreadPool;
 
 import java.io.*;
 import java.util.Arrays;

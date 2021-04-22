@@ -1,4 +1,4 @@
-package XmlParse;
+package filehandler.Parser;
 
 import org.xml.sax.Attributes;
 

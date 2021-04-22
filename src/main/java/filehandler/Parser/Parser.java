@@ -1,7 +1,6 @@
-package XmlParse;
+package filehandler.Parser;
 
-import Constants.UtilConfiguration;
-
+import constants.UtilConfiguration;
 /**
  * author:szf
  * desc:解析器抽象基类

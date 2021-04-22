@@ -1,14 +1,15 @@
-package XmlParse;
+package filehandler;
 
-import Constants.UtilConfiguration;
-import POI.OutputExcel;
-import ThreadPool.UrlUtilThreadPool;
+import constants.UtilConfiguration;
+import filehandler.FileCopyManager.FileCopyManager;
+import filehandler.Parser.SAXHandler;
 import org.xml.sax.SAXException;
+import poi.OutputExcel;
+import threadpool.UrlUtilThreadPool;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -21,18 +22,34 @@ import java.util.concurrent.ExecutorService;
  * desc:xml解析器
  * date:2021/2/19
  */
-public class XmlParser {
-    public static void parseXml(String apkName, Map<String, List<String>> configuration, boolean isDictOn) throws InterruptedException, IOException {
+public class ConfigurationHandler {
+    public static void execute(String apkName, Map<String, List<String>> configuration, boolean isDictOn) throws InterruptedException, IOException {
         ExecutorService executorService = UrlUtilThreadPool.getThreadPool();
         SAXParserFactory factory = SAXParserFactory.newInstance();
         CountDownLatch countDownLatch = new CountDownLatch(configuration.size());
         for (Map.Entry<String, List<String>> entry : configuration.entrySet()) {
-            String xmlPath = UtilConfiguration.XML_PATH + entry.getKey();
-            if (new File(xmlPath).exists()) {
-                executorService.submit(new ParserTask(countDownLatch, entry, apkName, entry.getKey(), factory, isDictOn));
-            } else {
-                System.out.println(UtilConfiguration.xmlNotFoundInfo(xmlPath));
-                countDownLatch.countDown();
+            String filePath = entry.getKey();
+            switch (UtilConfiguration.getFileHandlerType(filePath)) {
+                case UtilConfiguration.XML_TYPE: {
+                    if (new File(UtilConfiguration.XML_PATH + filePath).exists()) {
+                        executorService.submit(new ParserTask(countDownLatch, entry, apkName, entry.getKey(), factory, isDictOn));
+                    } else {
+                        System.out.println(UtilConfiguration.xmlNotFoundInfo(filePath));
+                        countDownLatch.countDown();
+                    }
+                    break;
+                }
+
+                case UtilConfiguration.TYPE_FILE_COPY: {
+                    FileCopyManager manager = new FileCopyManager(entry.getKey(), entry.getValue());
+                    executorService.submit(new CopyTask(countDownLatch, manager));
+                    break;
+                }
+
+                default: {
+                    countDownLatch.countDown();
+                    break;
+                }
             }
         }
         countDownLatch.await();
@@ -64,8 +81,30 @@ public class XmlParser {
             javax.xml.parsers.SAXParser parser;
             try {
                 parser = factory.newSAXParser();
-                parser.parse(new File(UtilConfiguration.XML_PATH + entry.getKey()), handler);
+                File file = new File(UtilConfiguration.XML_PATH + entry.getKey());
+                parser.parse(file, handler);
             } catch (ParserConfigurationException | SAXException | IOException e) {
+                e.printStackTrace();
+            } finally {
+                countDownLatch.countDown();
+            }
+        }
+    }
+
+    protected static class CopyTask implements Runnable {
+        private final CountDownLatch countDownLatch;
+        private final FileCopyManager manager;
+
+        public CopyTask(CountDownLatch countDownLatch, FileCopyManager manager) {
+            this.countDownLatch = countDownLatch;
+            this.manager = manager;
+        }
+
+        @Override
+        public void run() {
+            try {
+                manager.copyFiles();
+            } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 countDownLatch.countDown();

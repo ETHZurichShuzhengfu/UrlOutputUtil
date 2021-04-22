@@ -1,4 +1,4 @@
-package Constants;
+package constants;
 
 import java.io.File;
 import java.util.Arrays;
@@ -21,12 +21,15 @@ public class UtilConfiguration {
     public static final String CONF_EMPTY_INFO = "读取到的配置文件内容为空,请根据规范检查配置文件格式是否有问题";
     public static final String XML_PARSE_NOT_SUPPORT_INFO = "Sorry,current xml type is Not supported yet";
     /**
-     * xml类型,根据xml不同的结构适配不同的解析器
+     * 文件类型,根据不同的文件或文件目录名返回对应的FileHandler进行处理
      */
-    public static final int XML_TYPE_NORMAL = 1;
+    public static final int XML_TYPE=10000;
+    public static final int XML_TYPE_NORMAL = 10001;
+    public static final int TYPE_FILE_COPY = 2;
     public static final int XML_TYPE_NOT_SUPPORT = -1;
     public static final List<String> xmlType_1 = Arrays.asList("integers.xml", "strings.xml", "bools.xml",
             "colors.xml", "dimens.xml");
+    public static final List<String> copyFile = Arrays.asList("assets");
 
     /**
      * 文件目录
@@ -40,7 +43,7 @@ public class UtilConfiguration {
     public static final String ADDRESS_XML_PATH = MiddleOutDirectory + "assets/address.xml";
 
     public static String dictErrorHint(File file, int row, int col) {
-        return "Dict " + file.getName() + " has error in row" + row + " item" + col;
+        return "dict " + file.getName() + " has error in row" + row + " item" + col;
     }
 
     public static String xmlNotFoundInfo(String xmlPath) {
@@ -53,6 +56,14 @@ public class UtilConfiguration {
     public static int getParseType(String xmlName) {
         if (xmlType_1.contains(xmlName))
             return XML_TYPE_NORMAL;
+        return XML_TYPE_NOT_SUPPORT;
+    }
+    public static int getFileHandlerType(String fileName) {
+        if (xmlType_1.contains(fileName))
+            return XML_TYPE;
+        else if (copyFile.contains(fileName)) {
+            return TYPE_FILE_COPY;
+        }
         return XML_TYPE_NOT_SUPPORT;
     }
 }

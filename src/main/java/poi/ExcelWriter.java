@@ -1,14 +1,13 @@
-package POI;
+package poi;
 
-import Constants.UtilConfiguration;
-import XmlParse.ParseResultEntry;
+import filehandler.Parser.ParseResultEntry;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.util.List;
 
-import Dict.Dict;
+import dict.Dict;
 
 /**
  * author:szf
@@ -22,6 +21,7 @@ public class ExcelWriter {
     public static void writeExcelWithXmlTypeNormal(String fileName, List<ParseResultEntry> list, boolean isDictOn) {
         HSSFWorkbook hssfWorkBook = OutputExcel.getExcel();
         HSSFSheet sheet = hssfWorkBook.createSheet(fileName);
+        System.out.println(sheet.getSheetName());
         for (int i = 0; i < list.size(); i++) {
             HSSFRow item_row = sheet.createRow(i);
             HSSFCell key_cell = item_row.createCell(KEY_INDEX);

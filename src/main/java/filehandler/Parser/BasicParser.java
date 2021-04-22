@@ -1,6 +1,6 @@
-package XmlParse;
+package filehandler.Parser;
 
-import POI.ExcelWriter;
+import poi.ExcelWriter;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -51,9 +51,9 @@ public class BasicParser extends Parser {
     }
 
     @Override
-    public boolean isFieldValid(List<String> searchField, String content) {
-        for (String field : searchField) {
-            if (!field.isEmpty() && content.contains(field))
+    public boolean isFieldValid(List<String> searchList, String content) {
+        for (String fieldName : searchList) {
+            if (!fieldName.isEmpty() && fieldName.equals(content))
                 return true;
         }
         return false;

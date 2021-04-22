@@ -1,4 +1,4 @@
-package XmlParse;
+package filehandler.Parser;
 
 /**
  * author:szf
